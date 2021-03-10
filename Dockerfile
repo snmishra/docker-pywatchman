@@ -1,16 +1,19 @@
 ARG PYTHON_VERSION
-ARG WATHMAN_TAG
+ARG FMT_TAG
+ARG WATCHMAN_TAG
 FROM python:3.8 as watchman
 
+ENV FMT_TAG ${FMT_TAG}
+ENV WATCHMAN_TAG ${WATCHMAN_TAG}
 # The "folly" component currently fails if "fmt" is not explicitly installed first.
 RUN apt-get update && apt-get install -y sudo cmake
 WORKDIR /fmt
-RUN git clone --branch $WATHMAN_TAG --depth 1 https://github.com/fmtlib/fmt.git .
+RUN git clone --branch $FMT_TAG --depth 1 https://github.com/fmtlib/fmt.git .
 RUN cmake .
 RUN make -j$(nproc) && sudo make install
 
 WORKDIR /watchman
-RUN git clone --depth 1 https://github.com/facebook/watchman.git .
+RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watchman.git .
 RUN ./autogen.sh
 RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
 WORKDIR /dist
