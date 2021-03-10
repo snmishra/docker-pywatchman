@@ -1,10 +1,9 @@
 ARG PYTHON_VERSION
+FROM python:3.8 as watchman
+# FROM clears the ARGS, need to do it again
 ARG FMT_TAG
 ARG WATCHMAN_TAG
-FROM python:3.8 as watchman
 
-ENV FMT_TAG ${FMT_TAG}
-ENV WATCHMAN_TAG ${WATCHMAN_TAG}
 # The "folly" component currently fails if "fmt" is not explicitly installed first.
 RUN apt-get update && apt-get install -y sudo cmake
 WORKDIR /fmt
