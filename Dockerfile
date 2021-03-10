@@ -1,10 +1,11 @@
 ARG PYTHON_VERSION
-FROM python:3.7 as watchman
+ARG WATHMAN_TAG
+FROM python:3.8 as watchman
 
 # The "folly" component currently fails if "fmt" is not explicitly installed first.
 RUN apt-get update && apt-get install -y sudo cmake
 WORKDIR /fmt
-RUN git clone --depth 1 https://github.com/fmtlib/fmt.git .
+RUN git clone --branch $WATHMAN_TAG --depth 1 https://github.com/fmtlib/fmt.git .
 RUN cmake .
 RUN make -j$(nproc) && sudo make install
 
