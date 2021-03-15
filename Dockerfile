@@ -14,6 +14,7 @@ RUN make -j$(nproc) && sudo make install
 WORKDIR /watchman
 RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watchman.git .
 RUN ./autogen.sh
+RUN ./configure --enable-stack-protector
 RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
 WORKDIR /dist
 
