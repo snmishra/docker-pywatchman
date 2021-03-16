@@ -1,27 +1,23 @@
 ARG PYTHON_VERSION
-FROM python:3.8 as watchman
+FROM ubuntu:focal as watchman
 # FROM clears the ARGS, need to do it again
 ARG FMT_TAG
 ARG WATCHMAN_TAG
 
 # The "folly" component currently fails if "fmt" is not explicitly installed first.
-RUN apt-get update && apt-get install -y sudo cmake
-WORKDIR /fmt
-RUN git clone --branch $FMT_TAG --depth 1 https://github.com/fmtlib/fmt.git .
-RUN cmake .
-RUN make -j$(nproc) && sudo make install
-
+RUN apt-get update && apt-get install -y cmake build-essential libssl-dev libpcre3-dev m4 python-dev-is-python3
 WORKDIR /watchman
 RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watchman.git .
 RUN ./autogen.sh
-RUN ./configure --enable-stack-protector
-RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
+RUN chmod +x built/lib/*
+# RUN ./configure --enable-stack-protector
+# RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
 WORKDIR /dist
 
 FROM python:$PYTHON_VERSION
 ENV PIP_NO_CACHE_DIR=1
 
-COPY --from=watchman /dist /
+COPY --from=watchman /watchman/built/ /usr/local/
 COPY --from=watchman /watchman/python/ /watchman/python/
 RUN apt-get update \
     && apt-get install -y  \
