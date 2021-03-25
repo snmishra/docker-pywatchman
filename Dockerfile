@@ -13,7 +13,6 @@ RUN ./autogen.sh
 RUN find built -type f -exec strip {} ";"
 RUN chmod +x built/lib/*
 RUN cd /watchman/python \
-    && sed -i "s/^from distutils.core import /from setuptools import /g" setup.py \
     && python setup.py bdist_wheel
 # RUN ./configure --enable-stack-protector
 # RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
