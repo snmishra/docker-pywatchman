@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y git cmake build-essential libssl-dev li
 WORKDIR /watchman
 RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watchman.git .
 RUN ./autogen.sh
+RUN find built -type f -exec strip {} ";"
 RUN chmod +x built/lib/*
 # RUN ./configure --enable-stack-protector
 # RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
