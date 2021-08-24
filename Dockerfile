@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION
+ARG PYTHON_VERSION=3.8-slim
 FROM python:$PYTHON_VERSION as builder
 # FROM ubuntu:focal as watchman
 # FROM clears the ARGS, need to do it again
@@ -13,7 +13,7 @@ RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watch
 # RUN find built -type f -exec strip {} ";"
 # RUN chmod +x built/lib/*
 RUN cd /watchman/watchman/python \
-    && CMAKE_CURRENT_SOURCE_DIR=/watchman/watchman python setup.py bdist_wheel
+    && CMAKE_CURRENT_SOURCE_DIR=/watchman python setup.py bdist_wheel
 # RUN ./configure --enable-stack-protector
 # RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
 WORKDIR /
