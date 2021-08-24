@@ -2,7 +2,8 @@ name: Docker Image CI
 
 on:
   schedule:
-  - cron: "0 2 * * 2"
+    - cron: "0 2 * * 2"
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest

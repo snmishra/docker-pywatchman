@@ -12,8 +12,8 @@ RUN git clone --branch $WATCHMAN_TAG --depth 1 https://github.com/facebook/watch
 # RUN ./autogen.sh
 # RUN find built -type f -exec strip {} ";"
 # RUN chmod +x built/lib/*
-RUN cd /watchman/python \
-    && python setup.py bdist_wheel
+RUN cd /watchman/watchman/python \
+    && CMAKE_CURRENT_SOURCE_DIR=/watchman/watchman python setup.py bdist_wheel
 # RUN ./configure --enable-stack-protector
 # RUN make -j$(nproc) && mkdir /dist && make install DESTDIR=/dist
 WORKDIR /
@@ -26,7 +26,7 @@ FROM python:$PYTHON_VERSION
 ENV PIP_NO_CACHE_DIR=1
 
 COPY --from=builder /watchman-*-linux/ /usr/local/
-COPY --from=builder /watchman/python/dist/ /pywatchman/
+COPY --from=builder /watchman/watchman/python/dist/ /pywatchman/
 
 RUN pip install /pywatchman/pywatchman-*.whl
 RUN mkdir -p /usr/local/var/run/watchman/ && \
