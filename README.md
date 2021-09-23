@@ -1,6 +1,6 @@
 # Python watchman Docker Image
 
-Django's runserver works a lot more efficiently with watchman installed.
+Django's runserver works a lot more efficiently with [watchman](https://github.com/facebook/watchman) installed.
 
 If you are using a virtualenv in your container you'll just need to run
 `pip install /pywatchman/pywatchman-*.whl` from within your environment.
