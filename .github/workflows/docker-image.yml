@@ -4,13 +4,18 @@ on:
   schedule:
     - cron: "0 2 * * 2"
   workflow_dispatch:
+    inputs:
+      watchmanTag:
+        description: 'Watchman Tag'     
+        required: false
+        default: ''
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.8', '3.9', '3.8-slim', '3.9-slim']
+        python-version: ['3.8', '3.9', '3.10', '3.8-slim', '3.9-slim', '3.10-slim']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,7 +35,9 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Get latest watchman version
         run: |
-          echo "WATCHMAN_TAG=$(curl --silent https://api.github.com/repos/facebook/watchman/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
+          WATCHMAN_TAG="${{ github.event.inputs.watchmanTag }}"
+          test -z "$WATCHMAN_TAG" && WATCHMAN_TAG="$(curl --silent https://api.github.com/repos/facebook/watchman/releases/latest | jq -r .tag_name)"
+          echo "WATCHMAN_TAG=$WATCHMAN_TAG" >> $GITHUB_ENV
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
