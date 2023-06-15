@@ -17,7 +17,7 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12.0b2']
         variant: ['', 'slim']
-        debian-release: ['bullseye', 'bookworm']
+        debian-release: ['bullseye']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
             DEBIAN_RELEASE=${{ matrix.debian-release }}
             WATCHMAN_TAG=${{ env.WATCHMAN_TAG }}
           push: true
-          tags: snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}-${{ matrix.debian-release }} ${{ matrix.debian-release == 'bookworm' && ', snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}' }}
+          tags: snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache
