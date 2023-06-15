@@ -2,11 +2,11 @@ name: Docker Image CI
 
 on:
   schedule:
-    - cron: "0 2 * * 2"
+    - cron: '0 2 * * 2'
   workflow_dispatch:
     inputs:
       watchmanTag:
-        description: 'Watchman Tag'     
+        description: 'Watchman Tag'
         required: false
         default: ''
 jobs:
@@ -15,7 +15,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.8-slim', '3.9-slim', '3.10-slim', '3.11-slim']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12.0b2']
+        variant: ['', 'slim']
+        debian-release: ['bullseye', 'bookworm']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -45,9 +47,13 @@ jobs:
           context: .
           build-args: |
             PYTHON_VERSION=${{ matrix.python-version }}
+            VARIANT=${{ matrix.variant }}
+            DEBIAN_RELEASE=${{ matrix.debian-release }}
             WATCHMAN_TAG=${{ env.WATCHMAN_TAG }}
           push: true
-          tags: snmishra/pywatchman:${{ matrix.python-version }}
+          tags: |
+            snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}-${{ matrix.debian-release }}
+            ${{ matrix.debian-release == 'bookworm' && 'snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache

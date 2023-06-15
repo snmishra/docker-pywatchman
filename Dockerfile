@@ -1,5 +1,7 @@
-ARG PYTHON_VERSION=3.8-slim
-FROM python:$PYTHON_VERSION as builder
+ARG PYTHON_VERSION
+ARG VARIANT
+ARG DEBIAN_RELEASE
+FROM python:${PYTHON_VERSION}${VARIANT}-${DEBIAN_RELEASE} as builder
 # FROM ubuntu:focal as watchman
 # FROM clears the ARGS, need to do it again
 ARG WATCHMAN_TAG
@@ -21,8 +23,11 @@ RUN curl -sSLO https://github.com/facebook/watchman/releases/download/${WATCHMAN
     unzip watchman-${WATCHMAN_TAG}-linux.zip && \
     chmod +x watchman-${WATCHMAN_TAG}-linux/bin/* \
     watchman-${WATCHMAN_TAG}-linux/lib/*
-
-FROM python:$PYTHON_VERSION
+    
+ARG PYTHON_VERSION
+ARG VARIANT
+ARG DEBIAN_RELEASE
+FROM python:${PYTHON_VERSION}${VARIANT}-${DEBIAN_RELEASE}
 ENV PIP_NO_CACHE_DIR=1
 
 COPY --from=builder /watchman-*-linux/ /usr/local/
