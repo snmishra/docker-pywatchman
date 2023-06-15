@@ -51,9 +51,7 @@ jobs:
             DEBIAN_RELEASE=${{ matrix.debian-release }}
             WATCHMAN_TAG=${{ env.WATCHMAN_TAG }}
           push: true
-          tags: |
-            snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}-${{ matrix.debian-release }}
-            ${{ matrix.debian-release == 'bookworm' && 'snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}' }}
+          tags: snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}-${{ matrix.debian-release }} ${{ matrix.debian-release == 'bookworm' && ', snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache
