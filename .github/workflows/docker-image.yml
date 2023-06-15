@@ -16,7 +16,7 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12.0b2']
-        variant: ['', 'slim']
+        variant: ['', '-slim']
         debian-release: ['bullseye']
     steps:
       - name: Checkout
