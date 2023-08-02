@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12.0b2']
+        base-version: ['python:3.8', 'python:3.9', 'python:3.10', 'python:3.11', 'python:3.12.0b2', 'pypy:3.10']
         variant: ['', '-slim']
         debian-release: ['bullseye']
     steps:
@@ -46,12 +46,12 @@ jobs:
         with:
           context: .
           build-args: |
-            PYTHON_VERSION=${{ matrix.python-version }}
+            BASE_IMAGE=${{ matrix.base-version }}
             VARIANT=${{ matrix.variant }}
             DEBIAN_RELEASE=${{ matrix.debian-release }}
             WATCHMAN_TAG=${{ env.WATCHMAN_TAG }}
           push: true
-          tags: snmishra/pywatchman:${{ matrix.python-version }}${{ matrix.variant }}
+          tags: snmishra/pywatchman:${{ matrix.base-version }}${{ matrix.variant }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache
